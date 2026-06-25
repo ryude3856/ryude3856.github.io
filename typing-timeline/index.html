@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Typing Timeline</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="app">
+    <div data-testid="pane-left">
+      <div class="pane-top-bar">
+        <h1 data-testid="app-title" class="app-title">Typing Timeline</h1>
+        <button data-testid="reset-btn" type="button">リセット</button>
+      </div>
+      <details data-testid="settings-panel">
+        <summary>⚙ 設定</summary>
+        <div class="settings-body">
+          <label class="settings-row">
+            <span>更新タイミング</span>
+            <select data-testid="settings-updateMode">
+              <option value="raf">リアルタイム</option>
+              <option value="keyup">keyup ごと</option>
+            </select>
+          </label>
+          <label class="settings-row">
+            <span>アイドル閾値 (ms)</span>
+            <input type="number" data-testid="settings-idleThresholdMs" min="500" max="10000" step="500">
+          </label>
+          <label class="settings-row">
+            <span>時間スケール (px/ms)</span>
+            <input type="number" data-testid="settings-pxPerMs" min="0.1" max="5" step="0.1">
+          </label>
+          <label class="settings-row">
+            <span>最大押下保険 (ms)</span>
+            <input type="number" data-testid="settings-maxHoldMs" min="1000" max="60000" step="1000">
+          </label>
+          <label class="settings-row">
+            <span>記録打鍵数上限</span>
+            <input type="number" data-testid="settings-maxLogEntries" min="100" max="100000" step="100">
+          </label>
+        </div>
+      </details>
+      <textarea data-testid="input" placeholder="ここに入力してください"></textarea>
+      <p class="ime-note">※ IME 変換中 (日本語入力中) は物理キーの観測が不安定になることがあります。直接入力 (IME オフ) が推奨です。</p>
+      <div class="timeline-wrapper">
+        <canvas data-testid="timeline-canvas"></canvas>
+      </div>
+    </div>
+    <div data-testid="divider"></div>
+    <div data-testid="pane-right">
+      <div data-testid="stats">
+        <div data-testid="stat-speed">打鍵速度: —</div>
+        <div data-testid="stat-interval">打鍵間隔: —</div>
+        <div data-testid="stat-release">リリース時間: —</div>
+      </div>
+      <div class="log-header" aria-hidden="true">
+        <span class="log-col log-col-label">キー</span>
+        <span class="log-col log-col-interval">間隔</span>
+        <span class="log-col log-col-release">押下時間</span>
+      </div>
+      <div data-testid="log"></div>
+    </div>
+  </div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

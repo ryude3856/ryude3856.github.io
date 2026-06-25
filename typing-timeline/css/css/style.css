@@ -1,0 +1,327 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --color-bg: #f8f9fa;
+  --color-surface: #ffffff;
+  --color-border: #d0d7de;
+  --color-border-focus: #4a90e2;
+  --color-text: #1a1a2e;
+  --color-text-muted: #6e7781;
+  --color-accent: #4a90e2;
+  --color-accent-hover: #2d70c4;
+  --color-danger: #c0392b;
+  --color-divider: #d0d7de;
+
+  --hl-ref-bar: #f0a500;
+  --hl-hover-bar: #0099a8;
+  --hl-ref-row-bg: rgba(240, 165, 0, 0.12);
+  --hl-ref-row-outline: rgba(240, 165, 0, 0.55);
+  --hl-hover-row-bg: rgba(0, 153, 168, 0.14);
+  --hl-hover-row-outline: rgba(0, 153, 168, 0.65);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 14px;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+#app {
+  display: flex;
+  height: 100%;
+}
+
+/* ---- 左ペイン ---- */
+[data-testid="pane-left"] {
+  flex: none;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+  padding: 10px 10px 8px;
+  background: var(--color-surface);
+}
+
+.pane-top-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.app-title {
+  margin: 0;
+  flex: 1;
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+[data-testid="reset-btn"] {
+  padding: 4px 14px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  background: var(--color-accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background 0.15s;
+}
+
+[data-testid="reset-btn"]:hover {
+  background: var(--color-accent-hover);
+}
+
+[data-testid="reset-btn"]:active {
+  background: #1d5a9e;
+}
+
+[data-testid="input"] {
+  resize: vertical;
+  min-height: 80px;
+  padding: 7px 9px;
+  font-family: inherit;
+  font-size: inherit;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  outline: none;
+  color: var(--color-text);
+  background: var(--color-surface);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+[data-testid="input"]:focus {
+  border-color: var(--color-border-focus);
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.18);
+}
+
+.ime-note {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+  padding: 0 2px;
+}
+
+.timeline-wrapper {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  min-height: 60px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background: #fafbfc;
+}
+
+[data-testid="timeline-canvas"] {
+  display: block;
+}
+
+/* ---- ディバイダ ---- */
+[data-testid="divider"] {
+  flex: none;
+  width: 5px;
+  background: var(--color-divider);
+  cursor: col-resize;
+  user-select: none;
+  touch-action: none;
+  transition: background 0.15s;
+}
+
+[data-testid="divider"]:hover,
+[data-testid="divider"].dragging {
+  background: #9aa5b4;
+}
+
+/* ---- 右ペイン ---- */
+[data-testid="pane-right"] {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+  padding: 10px 10px 8px;
+  background: var(--color-surface);
+}
+
+[data-testid="stats"] {
+  flex: none;
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+[data-testid="stats"] > div {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  border-right: 1px solid var(--color-border);
+  text-align: center;
+}
+
+[data-testid="stats"] > div:last-child {
+  border-right: none;
+}
+
+/* ---- ログ ---- */
+.log-header {
+  display: flex;
+  gap: 8px;
+  padding: 2px 4px;
+  font-size: 0.75rem;
+  font-family: monospace;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+  border-radius: 4px 4px 0 0;
+  border: 1px solid var(--color-border);
+  border-bottom: none;
+}
+
+[data-testid="log"] {
+  flex: 1;
+  overflow-y: auto;
+  resize: vertical;
+  min-height: 60px;
+  border: 1px solid var(--color-border);
+  border-radius: 0 0 4px 4px;
+  padding: 2px 0;
+  font-family: monospace;
+  background: var(--color-surface);
+}
+
+.log-col {
+  display: inline-block;
+}
+
+.log-col-label {
+  width: 3.5em;
+  font-weight: bold;
+}
+
+.log-col-interval,
+.log-col-release {
+  width: 5.5em;
+  text-align: right;
+  color: var(--color-text-muted);
+}
+
+.log-row {
+  display: flex;
+  gap: 8px;
+  padding: 1px 4px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.log-row:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.log-col-interval--idle {
+  color: #b0bac3;
+  font-style: italic;
+}
+
+/* アイドル明けは間隔欄にダッシュ風の下線を追加（色だけに依存しない区別） */
+.log-row[data-idle="true"] .log-col-interval {
+  text-decoration: underline dotted;
+}
+
+.log-row--ref {
+  background: var(--hl-ref-row-bg);
+  outline: 1px solid var(--hl-ref-row-outline);
+  outline-offset: -1px;
+}
+
+.log-row--hover {
+  background: var(--hl-hover-row-bg);
+  outline: 1px solid var(--hl-hover-row-outline);
+  outline-offset: -1px;
+}
+
+/* 画面外インジケータ */
+.hl-indicator {
+  position: fixed;
+  z-index: 100;
+  background: rgba(26, 26, 46, 0.72);
+  color: #fff;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  pointer-events: none;
+  display: none;
+  font-family: system-ui, sans-serif;
+}
+
+.hl-indicator.visible {
+  display: block;
+}
+
+/* ---- 設定パネル ---- */
+[data-testid="settings-panel"] {
+  flex: none;
+  font-size: 0.8rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 4px 8px;
+  background: var(--color-bg);
+}
+
+[data-testid="settings-panel"] summary {
+  cursor: pointer;
+  user-select: none;
+  color: var(--color-text-muted);
+  padding: 2px 0;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.settings-body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 8px 0 4px;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.settings-row span {
+  flex: 1;
+  color: var(--color-text);
+  font-size: 0.8rem;
+}
+
+.settings-row select,
+.settings-row input[type="number"] {
+  width: 120px;
+  padding: 3px 6px;
+  font-size: 0.8rem;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  outline: none;
+  background: var(--color-surface);
+}
+
+.settings-row select:focus,
+.settings-row input[type="number"]:focus {
+  border-color: var(--color-border-focus);
+}
