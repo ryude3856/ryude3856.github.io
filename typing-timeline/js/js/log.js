@@ -4,6 +4,7 @@ export function initLog(logEl, recorder, settings) {
   let prevDownTime = null;
   let autoScroll = true;
   let onHoverCallback = null;
+  let onClickCallback = null;
 
   logEl.addEventListener('scroll', () => {
     // 末尾（END_EPS 以内）に居るときだけオートスクロール。終端から少しでも
@@ -17,6 +18,12 @@ export function initLog(logEl, recorder, settings) {
     if (!onHoverCallback) return;
     const row = e.target.closest('[data-index]');
     onHoverCallback(row ? parseInt(row.dataset.index, 10) : -1);
+  });
+
+  logEl.addEventListener('click', (e) => {
+    if (!onClickCallback) return;
+    const row = e.target.closest('[data-index]');
+    if (row) onClickCallback(parseInt(row.dataset.index, 10));
   });
 
   logEl.addEventListener('mouseout', (e) => {
@@ -105,6 +112,10 @@ export function initLog(logEl, recorder, settings) {
     onHoverCallback = cb;
   }
 
+  function onClick(cb) {
+    onClickCallback = cb;
+  }
+
   return {
     reset,
     getEl: () => logEl,
@@ -112,5 +123,6 @@ export function initLog(logEl, recorder, settings) {
     setScrollMode: (mode) => { autoScroll = mode === 'follow'; },
     setHighlight,
     onHover,
+    onClick,
   };
 }

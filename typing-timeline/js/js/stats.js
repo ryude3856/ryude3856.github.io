@@ -10,26 +10,26 @@ export function initStats(speedEl, intervalEl, releaseEl, recorder, settings) {
   let releaseCount = 0;
 
   function render() {
+    const speedVal = speedEl.querySelector('.stat-value');
+    const intervalVal = intervalEl.querySelector('.stat-value');
+    const releaseVal = releaseEl.querySelector('.stat-value');
+
     // 速度 = 集計対象の打鍵間隔の本数 ÷ それら間隔の合計時間。
     // 分子・分母とも「打鍵間隔」集合から取るため誤差が出ない（= 1000 / 間隔平均）。
     if (intervalCount === 0 || effectiveMs === 0) {
-      speedEl.textContent = '打鍵速度: —';
+      speedVal.textContent = '—';
     } else {
       const kps = intervalCount / (effectiveMs / 1000);
-      speedEl.textContent = `打鍵速度: ${kps.toFixed(1)} keys/s`;
+      speedVal.textContent = `${kps.toFixed(1)} keys/s`;
     }
 
-    if (intervalCount === 0) {
-      intervalEl.textContent = '打鍵間隔: —';
-    } else {
-      intervalEl.textContent = `打鍵間隔: ${Math.round(intervalSum / intervalCount)} ms`;
-    }
+    intervalVal.textContent = intervalCount === 0
+      ? '—'
+      : `${Math.round(intervalSum / intervalCount)} ms`;
 
-    if (releaseCount === 0) {
-      releaseEl.textContent = 'リリース時間: —';
-    } else {
-      releaseEl.textContent = `リリース時間: ${Math.round(releaseSum / releaseCount)} ms`;
-    }
+    releaseVal.textContent = releaseCount === 0
+      ? '—'
+      : `${Math.round(releaseSum / releaseCount)} ms`;
   }
 
   recorder.on('keydown', (seg) => {

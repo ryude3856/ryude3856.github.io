@@ -261,6 +261,22 @@ export function initSync(timelineApi, logApi) {
     scheduleSync('log');
   });
 
+  // ---- クリックによるタイムラインスクロール ----
+
+  function scrollTimelineToBarCenter(i) {
+    const layout = timelineApi.getLayout();
+    const bar = layout.bars.find(b => b.index === i);
+    if (!bar) return;
+    const maxScroll = Math.max(0, wrapper.scrollWidth - wrapper.clientWidth);
+    const desired = Math.max(0, Math.min(bar.xStart - wrapper.clientWidth / 2, maxScroll));
+    wrapper.scrollLeft = desired;
+    const applied = wrapper.scrollLeft;
+    timelineSyncTarget = applied;
+    requestAnimationFrame(() => { if (timelineSyncTarget === applied) timelineSyncTarget = null; });
+  }
+
+  logApi.onClick((i) => scrollTimelineToBarCenter(i));
+
   // ---- ホバーコールバック配線 ----
 
   timelineApi.onHover((i) => {

@@ -34,10 +34,11 @@ export function computeLayout(segments, nowMs, settings) {
     if (prevDownTime !== null) {
       const gap = seg.downTime - prevDownTime;
       if (gap > idleThresholdMs) {
-        // 区切り線は圧縮ギャップの中央に置く（直前バーストの終端と次バーストの始端の間）。
-        // logicalNow は直前打鍵の論理開始位置なので、半閾値分ずらすとギャップ内に収まる。
-        dividerXList.push((logicalNow + idleThresholdMs / 2) * pxPerMs);
+        // 区切り線は次バーストの開始位置（＝次バーの xStart）に置く。
+        // 先に logicalNow を進めてから divider 位置を記録することで、
+        // 区切り線と次のバーが同じ x に揃い、区切り線の直後にバーが始まる。
         logicalNow += idleThresholdMs;            // 圧縮後は閾値分だけ進む
+        dividerXList.push(logicalNow * pxPerMs);
       } else {
         logicalNow += gap;
       }
@@ -85,10 +86,26 @@ export function computeLayout(segments, nowMs, settings) {
     return { index: seg.id, lane: lanes[i], xStart, xEnd, label: seg.label, durationMs, closedBy: seg.closedBy };
   });
 
+  // 仮想カーソル位置と末尾アイドル破線:
+  // 最後の keydown からの経過時間を canvas X 座標に変換し、
+  // RAF ループ中に canvas を緩やかに伸ばしてジャンプを防ぐ。
+  // アイドル閾値を超えた瞬間に破線を追加し、記録停止を即時視覚化する。
+  let virtualCursorX = 0;
+  if (segments.length > 0) {
+    const lastLogStart = logStarts[logStarts.length - 1];
+    const lastSeg = segments[segments.length - 1];
+    const gapToNow = Math.max(0, nowMs - lastSeg.downTime);
+    virtualCursorX = (lastLogStart + Math.min(gapToNow, idleThresholdMs)) * pxPerMs;
+    if (gapToNow > idleThresholdMs) {
+      dividerXList.push((lastLogStart + idleThresholdMs) * pxPerMs);
+    }
+  }
+
   return {
     bars,
     laneCount: maxLane + 1,
     dividers: dividerXList,
+    virtualCursorX,
   };
 }
 
@@ -101,7 +118,7 @@ function draw(canvas, layout, hl = { refIndex: -1, hoverIndex: -1 }) {
   const laneCount = Math.max(1, layout.laneCount);
   const h = PAD_Y * 2 + laneCount * LANE_H;
   const maxX = layout.bars.reduce((m, b) => Math.max(m, b.xEnd), 0);
-  const w = Math.max(wrapper ? wrapper.clientWidth : 300, maxX + 60);
+  const w = Math.max(wrapper ? wrapper.clientWidth : 300, Math.max(maxX, layout.virtualCursorX ?? 0) + 60);
 
   canvas.width = w;
   canvas.height = h;
@@ -269,9 +286,15 @@ export function initTimeline(canvas, recorder, settings) {
   }
 
   function setHighlight(refIdx, hoverIdx) {
+    const hoverChanged = hoverIdx !== hlHover;
     hlRef = refIdx;
     hlHover = hoverIdx;
-    scheduleRender();
+    // keyup モードでは hover 変化時のみ即時描画（keydown 由来の余剰 render を防ぐ）。
+    // keyup イベント自体のレンダリングは recorder.on('keyup') が担う。
+    // RAF モードはループが毎フレーム render するため scheduleRender は冗長だが無害。
+    if (hoverChanged || settings.updateMode === 'raf') {
+      scheduleRender();
+    }
   }
 
   function onHover(cb) {
