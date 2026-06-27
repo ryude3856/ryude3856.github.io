@@ -14,12 +14,12 @@
   --color-danger: #c0392b;
   --color-divider: #d0d7de;
 
-  --hl-ref-bar: #f0a500;
-  --hl-hover-bar: #0099a8;
-  --hl-ref-row-bg: rgba(240, 165, 0, 0.12);
-  --hl-ref-row-outline: rgba(240, 165, 0, 0.55);
-  --hl-hover-row-bg: rgba(0, 153, 168, 0.14);
-  --hl-hover-row-outline: rgba(0, 153, 168, 0.65);
+  --hl-ref-bar: #e67e22;
+  --hl-hover-bar: #27ae60;
+  --hl-ref-row-bg: rgba(230, 126, 34, 0.12);
+  --hl-ref-row-outline: rgba(230, 126, 34, 0.55);
+  --hl-hover-row-bg: rgba(39, 174, 96, 0.14);
+  --hl-hover-row-outline: rgba(39, 174, 96, 0.65);
 }
 
 html, body {
@@ -59,16 +59,16 @@ html, body {
 .app-title {
   margin: 0;
   flex: 1;
-  font-size: 0.88rem;
-  color: var(--color-text-muted);
+  font-size: 1.2rem;
+  color: var(--color-text);
   font-weight: 600;
   letter-spacing: 0.02em;
 }
 
 [data-testid="reset-btn"] {
-  padding: 4px 14px;
+  padding: 6px 16px;
   cursor: pointer;
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   background: var(--color-accent);
   color: #fff;
   border: none;
@@ -157,6 +157,7 @@ html, body {
 [data-testid="stats"] {
   flex: none;
   display: flex;
+  flex-wrap: wrap;
   gap: 0;
   border: 1px solid var(--color-border);
   border-radius: 6px;
@@ -164,13 +165,28 @@ html, body {
   background: var(--color-surface);
 }
 
-[data-testid="stats"] > div {
+.stats-caption {
+  flex: 0 0 100%;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 3px 10px 2px;
+  border-bottom: 1px solid var(--color-border);
+  letter-spacing: 0.04em;
+}
+
+[data-testid="stats"] > div:not(.stats-caption) {
   flex: 1;
   padding: 8px 10px;
-  font-size: 0.82rem;
-  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  color: var(--color-text);
   border-right: 1px solid var(--color-border);
   text-align: center;
+}
+
+.stat-value {
+  font-size: 1.2em;
+  font-weight: 600;
 }
 
 [data-testid="stats"] > div:last-child {
@@ -226,6 +242,7 @@ html, body {
   padding: 1px 4px;
   font-size: 0.85rem;
   line-height: 1.5;
+  cursor: pointer;
 }
 
 .log-row:hover {
@@ -304,10 +321,70 @@ html, body {
   gap: 8px;
 }
 
-.settings-row span {
+.settings-row > span {
   flex: 1;
   color: var(--color-text);
   font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.help-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.help-btn {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid var(--color-text-muted);
+  background: none;
+  color: var(--color-text-muted);
+  font-size: 9px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.help-btn:hover,
+.help-btn:focus {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  outline: none;
+}
+
+.help-tooltip {
+  display: none;
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  width: 240px;
+  background: var(--color-text);
+  color: var(--color-surface);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  padding: 7px 10px;
+  border-radius: 5px;
+  z-index: 200;
+  pointer-events: none;
+  white-space: normal;
+  word-break: break-all;
+  word-wrap: break-word;
+}
+
+.settings-row > span:hover .help-tooltip,
+.help-wrap:focus-within .help-tooltip {
+  display: block;
 }
 
 .settings-row select,

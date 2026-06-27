@@ -2,7 +2,7 @@ const STORAGE_KEY = 'typing-timeline.settings';
 
 const DEFAULTS = {
   updateMode: 'raf',
-  idleThresholdMs: 3000,
+  idleThresholdMs: 1000,
   pxPerMs: 0.5,
   maxHoldMs: 10000,
   paneRatio: 0.7,
